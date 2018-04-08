@@ -2,3 +2,10 @@
 IAmWritingFiveChess/.classpath
 IAmWritingFiveChess/.project
 IAmWritingFiveChess/.settings/org.eclipse.jdt.core.prefs
+.classpath
+.project
+IAmWritingFiveChess/.idea/workspace.xml
+.idea/workspace.xml
+.idea/modules.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/RobotGobang.iml

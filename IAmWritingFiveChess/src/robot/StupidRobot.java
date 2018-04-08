@@ -1,9 +1,14 @@
 package robot;
 
 public class StupidRobot implements IRobot {
-    private static final short ROLE_OPPONENT = 1;
-    private static final short ROLE_ROBOT = 2;
-    private static final short ROLE_NON = 0;
+    private static final int BOARD_SIZE = 15;
+    private static final int ROLE_OPPONENT = 1;
+    private static final int ROLE_ROBOT = 2;
+    private static final int ROLE_NON = 0;
+    private static final int ORIENTATION_LR = 0;
+    private static final int ORIENTATION_UD = 1;
+    private static final int ORIENTATION_LT_RD = 2;
+    private static final int ORIENTATION_RT_LD = 3;
 
     private int[][] boardRef = null;
 
@@ -13,13 +18,49 @@ public class StupidRobot implements IRobot {
      *
      * @return a {@code robot.Pair} which contains a valid (x,y) position
      */
-    
-     /**@Override
+    @Override
     public Pair getDeterminedPos() {
-        return null;
-    } 
-     */
-    
+        int[][] situationRobot  = new int[boardRef.length][boardRef[0].length];
+        int[][] situationOpponent  = new int[boardRef.length][boardRef[0].length];
+
+        int maxRobotScore = 0;
+        Pair maxRobotPoint = new Pair();
+
+        int maxOpponentScore = 0;
+        Pair maxOpponentPoint = new Pair();
+        for(int i=0;i<BOARD_SIZE;i++){
+            for(int k=0;k<BOARD_SIZE;k++){
+                if(boardRef[i][k]!=ROLE_NON){
+                    situationOpponent[i][k]=situationRobot[i][k]=0;
+                }else{
+                    boardRef[i][k] = ROLE_OPPONENT;
+                    situationOpponent[i][k] = evaluateScore(ROLE_OPPONENT,i,k);
+                    boardRef[i][k]=ROLE_NON;
+                    if(situationOpponent[i][k]>maxOpponentScore){
+                        maxOpponentScore = situationOpponent[i][k];
+                        maxOpponentPoint.x = i;
+                        maxOpponentPoint.y = k;
+                    }
+
+                    boardRef[i][k]=ROLE_ROBOT;
+                    situationRobot[i][k]=evaluateScore(ROLE_ROBOT,i,k);
+                    boardRef[i][k]=ROLE_NON;
+                    if(situationRobot[i][k]>maxRobotScore){
+                        maxRobotScore = situationRobot[i][k];
+                        maxRobotPoint.x = i;
+                        maxRobotPoint.y = k;
+                    }
+
+                }
+            }
+        }
+        if(maxRobotScore > maxOpponentScore){
+            return maxRobotPoint;
+        }else{
+            return maxOpponentPoint;
+        }
+    }
+
     /**
      * This method is used to retrieve game board such that robot can determine its (x,y) position
      *
@@ -30,8 +71,98 @@ public class StupidRobot implements IRobot {
         boardRef = gameBoard;
     }
 
+    private int patternRecognition(int role, int x,int y,int orientation){
+        StringBuilder sb = new StringBuilder();
+        if(orientation==ORIENTATION_LR){
+            int leftBound = (x - 4)>=0?x-4:0;
+            int rightBound = (x +4)<BOARD_SIZE?x+4:BOARD_SIZE-1;
 
-    private void maxMinSearch(){
+            for(int i=leftBound;i<=rightBound;i++){
+                sb.append(boardRef[x][i]);
+            }
+        }else if(orientation == ORIENTATION_UD){
+            int bottomBound = (y+4)<BOARD_SIZE?y+4:BOARD_SIZE-1;
+            int topBound = (y-4)>=0?y-4:0;
 
+            for(int i=topBound;i<=bottomBound;i++){
+                sb.append(boardRef[i][y]);
+            }
+        }else if(orientation== ORIENTATION_LT_RD){
+            int leftBound = (x - 4)>=0?x-4:0;
+            int rightBound = (x +4)<BOARD_SIZE?x+4:BOARD_SIZE-1;
+            int bottomBound = (y+4)<BOARD_SIZE?y+4:BOARD_SIZE-1;
+            int topBound = (y-4)>=0?y-4:0;
+            for(int i=topBound,k=leftBound;i<=bottomBound && k<=rightBound;i++,k++){
+                sb.append(boardRef[i][k]);
+            }
+        }else if(orientation== ORIENTATION_RT_LD){
+            int leftBound = (x - 4)>=0?x-4:0;
+            int rightBound = (x +4)<BOARD_SIZE?x+4:BOARD_SIZE-1;
+            int bottomBound = (y+4)<BOARD_SIZE?y+4:BOARD_SIZE-1;
+            int topBound = (y-4)>=0?y-4:0;
+            for(int i=topBound,k=rightBound;i<=bottomBound && k>=leftBound;i++,k--){
+                sb.append(boardRef[i][k]);
+            }
+        }
+        String str = sb.toString();
+        //https://www.cnblogs.com/maxuewei2/p/4825520.html
+        if(str.contains(role == ROLE_ROBOT ? "22222" : "11111")){
+            return 60000;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "022220" : "011110")){
+            return 300000;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "22220" : "11110")||
+           str.contains(role == ROLE_ROBOT ? "02222" : "01111")){
+            return 2500;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "22202" : "11101") ||
+           str.contains(role == ROLE_ROBOT ? "20222" : "10111")){
+            return 3000;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "22022" : "11011")){
+            return 2600;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "0022200" : "0011100")){
+            return 3000;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "22200" : "11100")||
+                str.contains(role == ROLE_ROBOT ? "00222" : "00111")){
+            return 500;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "020220" : "010110")||
+                str.contains(role == ROLE_ROBOT ? "022020" : "011010")){
+            return 800;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "20022" : "10011")||
+                str.contains(role == ROLE_ROBOT ? "22002" : "11001")){
+            return 600;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "20202" : "10101")){
+            return 550;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "00022000" : "00011000")){
+            return 650;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "22000" : "11000")||
+                str.contains(role == ROLE_ROBOT ? "00022" : "00011")){
+            return 150;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "0020200" : "0010100")){
+            return 250;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "020020" : "010010")){
+            return 200;
+        }
+        return 0;
+    }
+
+
+    private int evaluateScore(int role,int x, int y){
+        int a = patternRecognition(role,x,y,ORIENTATION_RT_LD);
+        int b = patternRecognition(role,x,y,ORIENTATION_LT_RD);
+        int c = patternRecognition(role,x,y,ORIENTATION_UD);
+        int d = patternRecognition(role,x,y,ORIENTATION_LR);
+        return Math.max(Math.max(Math.max(a,b),c),d);
     }
 }
