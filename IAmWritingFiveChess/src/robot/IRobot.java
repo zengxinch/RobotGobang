@@ -1,3 +1,5 @@
+package robot;
+
 import java.util.Random;
 
 public interface IRobot {
@@ -6,7 +8,7 @@ public interface IRobot {
 	/**
 	 * There we provide a default implementation to simulate robot's behavior
 	 *
-	 * @return a {@code Pair} which contains a valid (x,y) position
+	 * @return a {@code robot.Pair} which contains a valid (x,y) position
 	 */
 	default Pair getDeterminedPos() {
 		return new Pair(rand.nextInt(15) + 1, rand.nextInt(15) + 1);
