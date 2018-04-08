@@ -26,38 +26,47 @@ class MyFiveChessFrame extends JFrame
 /**
  * A component that displays a tiled image
  */
-class ImageComponent extends JComponent implements MouseListener
+class ImageComponent extends JComponent implements MouseListener, Runnable
 {
    private static final int DEFAULT_WIDTH = 500;
    private static final int DEFAULT_HEIGHT = 500;
    int x;
    int y;
-   int allchess[][] = new int[16][16];   
-   boolean isBlack = true;               
+   int allchess[][] = new int[16][16];
+   boolean isBlack = true;
    boolean canPlay = true;
    private Image image;
    private IRobot iRobot;
+   private String string = "It's Black";
+   //保存游戏最多运行时间
+   int maxTime = 0;
+   //倒计时线程
+  // Thread t = new Thread(this);
+   
+   //保存黑方与白方剩余时间
+   int whiteTime = 0;
+   int blackTime = 0;
    
    public ImageComponent(IRobot iRobot)
    {
-	   this.iRobot = iRobot;
-     
+	   this.iRobot = iRobot;    
 	   addMouseListener(this);
+	  // t.start();
+	 //  t.suspend();
 	   image = new ImageIcon("C:\\Users\\10703\\eclipse-workspace\\IAmWritingFiveChess\\background.jpg").getImage();
    }
 
    public void paint(Graphics g)
    {
       if (image == null) return;
-
-      int imageWidth = image.getWidth(null);
-      int imageHeight = image.getHeight(null);
-      
+     
       g.drawImage(image, 0, 0, null);
       
       g.setFont(new Font("宋体", 0, 16));
-      g.drawString("Black time: Unlimited", 28, 444);
-      g.drawString("White time: Unlimited", 250, 444);
+      g.drawString("Black time: （秒） " + blackTime*60, 28, 444);
+      g.drawString("White time: （秒） " + whiteTime*60, 250, 444);
+      g.setFont(new Font("Times New Roman", 0, 27));
+      g.drawString(string, 135, 34);
       
       for (int i = 0; i < 16; i++) {
 		g.drawLine(10, 50 + i*24, 369, 50 + i*24);
@@ -88,10 +97,92 @@ class ImageComponent extends JComponent implements MouseListener
    
    public Dimension getPreferredSize() { return new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT); }
 
+@SuppressWarnings("deprecation")
 @Override
 public void mouseClicked(MouseEvent e) {
 	// TODO Auto-generated method stub
+	if (x>400 && x<470 && y>50 && y<80) {
+		int restart = JOptionPane.showConfirmDialog(this, "是否确认重新开始游戏");
+		if (restart == 0) {
+			allchess = new int[16][16];
+			string = "It's Black";
+			isBlack = true;
+			blackTime = maxTime;
+			whiteTime = maxTime;
+		
+			this.repaint();
+		}
+	}
+	if (x>400 && x<470 && y>100 && y<130) {
+		String input = JOptionPane.showInputDialog("请输入最大下棋时间（单位分），0代表无限制：");
+		try {
+			maxTime = Integer.parseInt(input) * 60;
+			if (maxTime < 0) {
+				JOptionPane.showMessageDialog(this, "请输入正确信息！");
+			}
+
+				if (maxTime == 0) {				
+         			int haha = JOptionPane.showConfirmDialog(this, "设置完成是否重新开始游戏");
+			        if (haha == 0) {
+			        	allchess = new int[16][16];
+						string = "It's Black";
+						isBlack = true;
+						blackTime = 11111;
+						whiteTime = 11111;
+						this.repaint();
+					}
+				    if(haha == 1 ){
+				    	blackTime = 11111;
+						whiteTime = 11111;
+						this.repaint();
+					}
+				}
+				
+				if (maxTime > 0) {
+					int haha = JOptionPane.showConfirmDialog(this, "设置完成是否重新开始游戏");
+			        if (haha == 0) {
+			        	allchess = new int[16][16];
+						string = "It's Black";
+						isBlack = true;
+						blackTime = maxTime;
+						whiteTime = maxTime;
+						//t.resume();
+						this.repaint();
+				}
+			        else {
+			        	blackTime = maxTime;
+						whiteTime = maxTime;
+						this.repaint();
+					}
+				
+				}
+		} catch (NumberFormatException e2) {
+			// TODO: handle exception
+			JOptionPane.showMessageDialog(this, "请输入正确信息！");
+		}
+	}
+	if (x>400 && x<470 && y>150 && y<180) {
+		JOptionPane.showMessageDialog(this, "五子棋你都不会下么，如果不会，请参见百度，谢谢!");
+	}
+	if (x>400 && x<470 && y>250 && y<280) {
+		int abandoning = JOptionPane.showConfirmDialog(this, "已经决定了么");
+		if (abandoning == 0) {
+			if(isBlack) JOptionPane.showMessageDialog(this, "黑方认输");
+			canPlay = false;
+			System.exit(0);
+		}
 	
+	}
+	if (x>400 && x<470 && y>300 && y<330) {
+		JOptionPane.showMessageDialog(this, "本软件由杨易大佬与曾鑫开发，若有问题，请自行解决.");
+	}
+	if (x>400 && x<470 && y>350 && y<380) {
+		int Continue = JOptionPane.showConfirmDialog(this, "不再玩一会么");
+		if(Continue == 0) {
+			JOptionPane.showMessageDialog(this, "大爷再见，欢迎下次再来。");
+		    System.exit(0);
+		}
+	}
 }
 
 @Override
@@ -99,6 +190,9 @@ public void mousePressed(MouseEvent e) {
 	// TODO Auto-generated method stub
 	//System.out.println("X" + e.getX());
 	//System.out.println("Y" + e.getY());
+	
+
+	
 	if (canPlay == true) { 
 	 x = e.getX();
 	 y = e.getY();
@@ -111,7 +205,8 @@ public void mousePressed(MouseEvent e) {
 		if (isBlack == true) {
 			allchess[x][y] = 1;
 			iRobot.retrieveGameBoard(allchess);
-			isBlack = false;				
+			isBlack = false;
+			string = "It's White";
 			
 		boolean winFlag = this.checkWin();
 		if (winFlag == true) {
@@ -140,6 +235,7 @@ void RobotAction(){
 	y= pair.y;
 	allchess[x][y] = 2;
 	isBlack = true;
+	string = "It's Black";
 	
 	boolean winFlag = this.checkWin();
 	if (winFlag == true) {
@@ -232,5 +328,26 @@ private boolean checkWin() {
 	return flag;
 	
    }
+
+@Override
+public void run() {
+	// TODO Auto-generated method stub
+	if (maxTime > 0) {
+		while(true)
+			if (isBlack) {
+				blackTime--;
+			}else {
+				whiteTime--;
+			}
+		
+	}
+	try {
+		Thread.sleep(1000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	System.out.println(whiteTime +"and"+blackTime);
+}
 
 }
