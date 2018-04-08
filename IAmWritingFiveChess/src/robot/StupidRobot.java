@@ -13,11 +13,13 @@ public class StupidRobot implements IRobot {
      *
      * @return a {@code robot.Pair} which contains a valid (x,y) position
      */
-    @Override
+    
+     /**@Override
     public Pair getDeterminedPos() {
         return null;
-    }
-
+    } 
+     */
+    
     /**
      * This method is used to retrieve game board such that robot can determine its (x,y) position
      *

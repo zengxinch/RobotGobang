@@ -1,5 +1,6 @@
 package MyFiveChess;
 
+import robot.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -15,9 +16,9 @@ import javax.swing.JOptionPane;
 
 class MyFiveChessFrame extends JFrame
 {
-   public MyFiveChessFrame()
+   public MyFiveChessFrame(IRobot robot)
    {
-      add(new ImageComponent());
+      add(new ImageComponent(robot));
       pack();
    }
 }
@@ -34,12 +35,14 @@ class ImageComponent extends JComponent implements MouseListener
    int allchess[][] = new int[16][16];   
    boolean isBlack = true;               
    boolean canPlay = true;
-   
    private Image image;
-
-   public ImageComponent()
+   private IRobot iRobot;
+   
+   public ImageComponent(IRobot iRobot)
    {
-       addMouseListener(this);
+	   this.iRobot = iRobot;
+     
+	   addMouseListener(this);
 	   image = new ImageIcon("C:\\Users\\10703\\eclipse-workspace\\IAmWritingFiveChess\\background.jpg").getImage();
    }
 
@@ -83,8 +86,6 @@ class ImageComponent extends JComponent implements MouseListener
   	}
    }
    
- 
-    
    public Dimension getPreferredSize() { return new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT); }
 
 @Override
@@ -99,35 +100,48 @@ public void mousePressed(MouseEvent e) {
 	//System.out.println("X" + e.getX());
 	//System.out.println("Y" + e.getY());
 	if (canPlay == true) { 
-	x = e.getX();
+	 x = e.getX();
 	 y = e.getY();
 	if (x>10 && x<369 && y>49 && y<408) {
         float xxx = (float) 24.0;
 		x = Math.round((x - 10)/xxx);
 		y = Math.round((y - 49)/xxx);
-		if(allchess[x][y] == 0)
-		{
+		
 		if (isBlack == true) {
 			allchess[x][y] = 1;
-			isBlack = false;
-		}
-		else {
-			allchess[x][y] = 2;
-			isBlack = true;
-		}}
-		else {
-			JOptionPane.showMessageDialog(this, "Please play chess in the chessboard");
-		}
-		
+			iRobot.retrieveGameBoard(allchess);
+			isBlack = false;				
+			
 		boolean winFlag = this.checkWin();
 		if (winFlag == true) {
 			JOptionPane.showMessageDialog(this, "Game over"+(allchess[x][y]==1 ? "Black" : "White") + "winned");
 			canPlay = false;
 		}
+		}
+		else {
+			RobotAction();
+		}
 		this.repaint();
 	}
-	
+		
 	}
+}
+
+void RobotAction(){
+	
+	Pair pair = iRobot.getDeterminedPos();
+	x = pair.x;
+	y= pair.y;
+	allchess[x][y] = 2;
+	isBlack = true;
+	
+	boolean winFlag = this.checkWin();
+	if (winFlag == true) {
+		JOptionPane.showMessageDialog(this, "Game over"+(allchess[x][y]==1 ? "Black" : "White") + " winned");
+		canPlay = false;
+	}
+	
+	this.repaint();
 }
 
 @Override
@@ -149,14 +163,13 @@ public void mouseExited(MouseEvent e) {
 }
 
 private boolean checkWin() {
-	
-	
+		
 	boolean flag = false;
 	int count = 1;
 	int color = allchess[x][y];
 	int i = 1;
 	
-	while( ((x+i)<16)&&color == allchess[x+i][y]) {
+	while(((x+i)<16)&&color == allchess[x+i][y]) {
 		count++;
 	    i++;
 		}
@@ -195,7 +208,7 @@ private boolean checkWin() {
 		}
 	if(count3>=5)
 		{flag = true;}
-	//���������ж�
+
 	int count4 = 1;
 	int i4 = 1;
 	while(((y-i4)>=1)&&((x-i4)>=1)&&color == allchess[x-i4][y-i4]) {
