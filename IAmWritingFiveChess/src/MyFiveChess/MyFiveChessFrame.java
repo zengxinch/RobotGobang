@@ -12,7 +12,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.plaf.OptionPaneUI;
 
 class MyFiveChessFrame extends JFrame
 {
@@ -32,8 +31,8 @@ class ImageComponent extends JComponent implements MouseListener
    private static final int DEFAULT_HEIGHT = 500;
    int x;
    int y;
-   int allchess[][] = new int[19][19];
-   boolean isBlack = true;
+   int allchess[][] = new int[16][16];   
+   boolean isBlack = true;               
    boolean canPlay = true;
    
    private Image image;
@@ -57,23 +56,23 @@ class ImageComponent extends JComponent implements MouseListener
       g.drawString("黑方时间：无限制", 28, 444);
       g.drawString("白方时间：无限制", 250, 444);
       
-      for (int i = 0; i < 19; i++) {
-		g.drawLine(10, 50 + i*20, 369, 50 + i*20);
-		g.drawLine(10 + i*20, 50, 10 + i*20, 410);
+      for (int i = 0; i < 16; i++) {
+		g.drawLine(10, 50 + i*24, 369, 50 + i*24);
+		g.drawLine(10 + i*24, 50, 10 + i*24, 410);
 	}
       
       
-      for (int i = 0; i < 19; i++) {
-  		for(int j = 0; j < 19; j++)
+      for (int i = 0; i < 16; i++) {
+  		for(int j = 0; j < 16; j++)
   		{
   			if(allchess[i][j] == 1) {//黑子
-  			int tempx = i * 20 + 10;
-  			int tempy = j * 20 + 50;
+  			int tempx = i * 24 + 10;
+  			int tempy = j * 24 + 50;
   			g.fillOval(tempx-7, tempy-7, 14, 14);
   			}
   			if (allchess[i][j] == 2) {//白子
-  				int tempx = i * 20 + 10;
-  	  			int tempy = j * 20 + 50;
+  				int tempx = i * 24 + 10;
+  	  			int tempy = j * 24 + 50;
   	  			g.setColor(Color.WHITE);
   	  			g.fillOval(tempx-7, tempy-7, 14, 14);
   	  			g.setColor(Color.BLACK);
@@ -103,9 +102,9 @@ public void mousePressed(MouseEvent e) {
 	x = e.getX();
 	 y = e.getY();
 	if (x>10 && x<369 && y>49 && y<408) {
-        float xxx = (float) 20.0;
+        float xxx = (float) 24.0;
 		x = Math.round((x - 10)/xxx);
-		y = Math.round((y - 50)/xxx);
+		y = Math.round((y - 49)/xxx);
 		if(allchess[x][y] == 0)
 		{
 		if (isBlack == true) {
@@ -157,12 +156,12 @@ private boolean checkWin() {
 	int color = allchess[x][y];
 	int i = 1;
 	//横向判断
-	while(color == allchess[x+i][y]) {
+	while( ((x+i)<16)&&color == allchess[x+i][y]) {
 		count++;
 	    i++;
 		}
 	i = 1;
-	while(color == allchess[x-i][y]) {
+	while(((x-i)>=1)&&color == allchess[x-i][y]) {
 		count++;
 	    i++;
 		}
@@ -171,12 +170,12 @@ private boolean checkWin() {
 	//竖向判断
 	int count2 = 1;
 	int i2 = 1;
-	while(color == allchess[x][y+i2]) {
+	while(((y+i2)<16)&&color == allchess[x][y+i2]) {
 		count2++;
 	    i2++;
 		}
 	i = 1;
-	while(color == allchess[x][y-i2]) {
+	while(((y-i2)>=1)&&color == allchess[x][y-i2]) {
 		count2++;
 	    i2++;
 		}
@@ -185,12 +184,12 @@ private boolean checkWin() {
 	//右上左下判断
 	int count3 = 1;
 	int i3 = 1;
-	while(color == allchess[x+i3][y-i3]) {
+	while(((y-i3)>=1)&&((x+i3)<16)&&color == allchess[x+i3][y-i3]) {
 		count3++;
 	    i3++;
 		}
 	i = 1;
-	while(color == allchess[x-i3][y+i3]) {
+	while(((x-i3)>=1)&&((y+i3)<16)&&color == allchess[x-i3][y+i3]) {
 		count3++;
 	    i3++;
 		}
@@ -199,20 +198,20 @@ private boolean checkWin() {
 	//左上右下判断
 	int count4 = 1;
 	int i4 = 1;
-	while(color == allchess[x-i4][y-i4]) {
+	while(((y-i4)>=1)&&((x-i4)>=1)&&color == allchess[x-i4][y-i4]) {
 		count4++;
 	    i4++;
 		}
 	i = 1;
-	while(color == allchess[x+i4][y+i4]) {
+	while(((x+i4)<16)&&((y+i4)<16)&&color == allchess[x+i4][y+i4]) {
 		count4++;
 	    i4++;
 		}
 	if(count4>=5)
 		{flag = true;}
 	
-	
 	return flag;
 	
-	
-}}
+   }
+
+}
