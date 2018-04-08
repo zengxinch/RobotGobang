@@ -8,7 +8,7 @@ public class test {
 	      EventQueue.invokeLater(() ->
 	         {
 	            JFrame frame = new MyFiveChessFrame();
-	            frame.setTitle("ŒÂ◊”∆Â");
+	            frame.setTitle("‰∫îÂ≠êÊ£ã");
 	            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	            frame.setVisible(true);
 	         });

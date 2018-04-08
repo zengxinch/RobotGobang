@@ -52,9 +52,9 @@ class ImageComponent extends JComponent implements MouseListener
       
       g.drawImage(image, 0, 0, null);
       
-      g.setFont(new Font("宋体", 0, 16));
-      g.drawString("黑方时间：无限制", 28, 444);
-      g.drawString("白方时间：无限制", 250, 444);
+      g.setFont(new Font("瀹嬩綋", 0, 16));
+      g.drawString("Black time: Unlimited", 28, 444);
+      g.drawString("White time: Unlimited", 250, 444);
       
       for (int i = 0; i < 16; i++) {
 		g.drawLine(10, 50 + i*24, 369, 50 + i*24);
@@ -65,12 +65,12 @@ class ImageComponent extends JComponent implements MouseListener
       for (int i = 0; i < 16; i++) {
   		for(int j = 0; j < 16; j++)
   		{
-  			if(allchess[i][j] == 1) {//黑子
+  			if(allchess[i][j] == 1) {
   			int tempx = i * 24 + 10;
   			int tempy = j * 24 + 50;
   			g.fillOval(tempx-7, tempy-7, 14, 14);
   			}
-  			if (allchess[i][j] == 2) {//白子
+  			if (allchess[i][j] == 2) {
   				int tempx = i * 24 + 10;
   	  			int tempy = j * 24 + 50;
   	  			g.setColor(Color.WHITE);
@@ -116,12 +116,12 @@ public void mousePressed(MouseEvent e) {
 			isBlack = true;
 		}}
 		else {
-			JOptionPane.showMessageDialog(this, "此处已有棋子，请重新落子");
+			JOptionPane.showMessageDialog(this, "Please play chess in the chessboard");
 		}
 		
 		boolean winFlag = this.checkWin();
 		if (winFlag == true) {
-			JOptionPane.showMessageDialog(this, "游戏结束"+(allchess[x][y]==1 ? "黑方" : "白方") + "获胜");
+			JOptionPane.showMessageDialog(this, "Game over"+(allchess[x][y]==1 ? "Black" : "White") + "winned");
 			canPlay = false;
 		}
 		this.repaint();
@@ -155,7 +155,7 @@ private boolean checkWin() {
 	int count = 1;
 	int color = allchess[x][y];
 	int i = 1;
-	//横向判断
+	
 	while( ((x+i)<16)&&color == allchess[x+i][y]) {
 		count++;
 	    i++;
@@ -167,7 +167,7 @@ private boolean checkWin() {
 		}
 	if(count>=5)
 		{flag = true;}
-	//竖向判断
+	//锟斤拷锟斤拷锟叫讹拷
 	int count2 = 1;
 	int i2 = 1;
 	while(((y+i2)<16)&&color == allchess[x][y+i2]) {
@@ -181,7 +181,7 @@ private boolean checkWin() {
 		}
 	if(count2>=5)
 		{flag = true;}
-	//右上左下判断
+	
 	int count3 = 1;
 	int i3 = 1;
 	while(((y-i3)>=1)&&((x+i3)<16)&&color == allchess[x+i3][y-i3]) {
@@ -195,7 +195,7 @@ private boolean checkWin() {
 		}
 	if(count3>=5)
 		{flag = true;}
-	//左上右下判断
+	//锟斤拷锟斤拷锟斤拷锟斤拷锟叫讹拷
 	int count4 = 1;
 	int i4 = 1;
 	while(((y-i4)>=1)&&((x-i4)>=1)&&color == allchess[x-i4][y-i4]) {
