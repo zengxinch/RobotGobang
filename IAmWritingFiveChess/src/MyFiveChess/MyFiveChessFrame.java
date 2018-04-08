@@ -106,7 +106,8 @@ public void mousePressed(MouseEvent e) {
         float xxx = (float) 24.0;
 		x = Math.round((x - 10)/xxx);
 		y = Math.round((y - 49)/xxx);
-		
+		if(allchess[x][y] == 0)
+		{
 		if (isBlack == true) {
 			allchess[x][y] = 1;
 			iRobot.retrieveGameBoard(allchess);
@@ -116,12 +117,17 @@ public void mousePressed(MouseEvent e) {
 		if (winFlag == true) {
 			JOptionPane.showMessageDialog(this, "Game over"+(allchess[x][y]==1 ? "Black" : "White") + "winned");
 			canPlay = false;
-		}
+	    	}
+		this.repaint();
 		}
 		else {
 			RobotAction();
+		  }
 		}
-		this.repaint();
+		else {
+			JOptionPane.showMessageDialog(this, "Please play chess in the chessboard");
+		}
+		
 	}
 		
 	}
