@@ -71,6 +71,15 @@ public class StupidRobot implements IRobot {
         boardRef = gameBoard;
     }
 
+
+    /**
+     * The policy of evaluating was referred to https://www.cnblogs.com/maxuewei2/p/4825520.html
+     * @param role the role of current player
+     * @param x position x
+     * @param y position y
+     * @param orientation orientation of determining line
+     * @return
+     */
     private int patternRecognition(int role, int x,int y,int orientation){
         StringBuilder sb = new StringBuilder();
         if(orientation==ORIENTATION_LR){
@@ -105,34 +114,32 @@ public class StupidRobot implements IRobot {
             }
         }
         String str = sb.toString();
-        //https://www.cnblogs.com/maxuewei2/p/4825520.html
         if(str.contains(role == ROLE_ROBOT ? "22222" : "11111")){
-            return 60000;
+            return 6000000;
         }
         if(str.contains(role == ROLE_ROBOT ? "022220" : "011110")){
             return 300000;
         }
-        if(str.contains(role == ROLE_ROBOT ? "22220" : "11110")||
-           str.contains(role == ROLE_ROBOT ? "02222" : "01111")){
-            return 2500;
-        }
         if(str.contains(role == ROLE_ROBOT ? "22202" : "11101") ||
-           str.contains(role == ROLE_ROBOT ? "20222" : "10111")){
+                str.contains(role == ROLE_ROBOT ? "20222" : "10111")){
+            return 3000;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "0022200" : "0011100")){
             return 3000;
         }
         if(str.contains(role == ROLE_ROBOT ? "22022" : "11011")){
             return 2600;
         }
-        if(str.contains(role == ROLE_ROBOT ? "0022200" : "0011100")){
-            return 3000;
-        }
-        if(str.contains(role == ROLE_ROBOT ? "22200" : "11100")||
-                str.contains(role == ROLE_ROBOT ? "00222" : "00111")){
-            return 500;
+        if(str.contains(role == ROLE_ROBOT ? "22220" : "11110")||
+           str.contains(role == ROLE_ROBOT ? "02222" : "01111")){
+            return 2500;
         }
         if(str.contains(role == ROLE_ROBOT ? "020220" : "010110")||
                 str.contains(role == ROLE_ROBOT ? "022020" : "011010")){
             return 800;
+        }
+        if(str.contains(role == ROLE_ROBOT ? "00022000" : "00011000")){
+            return 650;
         }
         if(str.contains(role == ROLE_ROBOT ? "20022" : "10011")||
                 str.contains(role == ROLE_ROBOT ? "22002" : "11001")){
@@ -141,12 +148,9 @@ public class StupidRobot implements IRobot {
         if(str.contains(role == ROLE_ROBOT ? "20202" : "10101")){
             return 550;
         }
-        if(str.contains(role == ROLE_ROBOT ? "00022000" : "00011000")){
-            return 650;
-        }
-        if(str.contains(role == ROLE_ROBOT ? "22000" : "11000")||
-                str.contains(role == ROLE_ROBOT ? "00022" : "00011")){
-            return 150;
+        if(str.contains(role == ROLE_ROBOT ? "22200" : "11100")||
+                str.contains(role == ROLE_ROBOT ? "00222" : "00111")){
+            return 500;
         }
         if(str.contains(role == ROLE_ROBOT ? "0020200" : "0010100")){
             return 250;
@@ -154,9 +158,12 @@ public class StupidRobot implements IRobot {
         if(str.contains(role == ROLE_ROBOT ? "020020" : "010010")){
             return 200;
         }
+        if(str.contains(role == ROLE_ROBOT ? "22000" : "11000")||
+                str.contains(role == ROLE_ROBOT ? "00022" : "00011")){
+            return 150;
+        }
         return 0;
     }
-
 
     private int evaluateScore(int role,int x, int y){
         int a = patternRecognition(role,x,y,ORIENTATION_RT_LD);

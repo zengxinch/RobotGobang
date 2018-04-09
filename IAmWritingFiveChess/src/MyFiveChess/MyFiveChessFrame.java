@@ -51,9 +51,8 @@ class ImageComponent extends JComponent implements MouseListener, Runnable
    {
 	   this.iRobot = iRobot;    
 	   addMouseListener(this);
-	  // t.start();
-	 //  t.suspend();
-	   image = new ImageIcon("C:\\Users\\10703\\eclipse-workspace\\IAmWritingFiveChess\\background.jpg").getImage();
+	   image = new ImageIcon("background.jpg").getImage();
+	   System.out.println(image.getAccelerationPriority());
    }
 
    public void paint(Graphics g)
@@ -282,7 +281,7 @@ private boolean checkWin() {
 		}
 	if(count>=5)
 		{flag = true;}
-	//�����ж�
+	//?????ж?
 	int count2 = 1;
 	int i2 = 1;
 	while(((y+i2)<16)&&color == allchess[x][y+i2]) {
