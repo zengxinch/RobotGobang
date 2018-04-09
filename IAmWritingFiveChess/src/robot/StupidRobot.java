@@ -69,6 +69,14 @@ public class StupidRobot implements IRobot {
     @Override
     public void retrieveGameBoard(int[][] gameBoard) {
         boardRef = gameBoard;
+        System.out.println("------------------------------");
+        for(int i=0;i<BOARD_SIZE;i++){
+            for(int k=0;k<BOARD_SIZE;k++){
+                System.out.print(boardRef[k][i]);
+            }
+            System.out.println();
+        }
+        System.out.println("------------------------------");
     }
 
 
@@ -131,7 +139,7 @@ public class StupidRobot implements IRobot {
             return 2600;
         }
         if(str.contains(role == ROLE_ROBOT ? "22220" : "11110")||
-           str.contains(role == ROLE_ROBOT ? "02222" : "01111")){
+            str.contains(role == ROLE_ROBOT ? "02222" : "01111")){
             return 2500;
         }
         if(str.contains(role == ROLE_ROBOT ? "020220" : "010110")||

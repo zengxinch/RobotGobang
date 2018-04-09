@@ -52,7 +52,6 @@ class ImageComponent extends JComponent implements MouseListener, Runnable
 	   this.iRobot = iRobot;    
 	   addMouseListener(this);
 	   image = new ImageIcon("background.jpg").getImage();
-	   System.out.println(image.getAccelerationPriority());
    }
 
    public void paint(Graphics g)
@@ -193,36 +192,34 @@ public void mousePressed(MouseEvent e) {
 
 	
 	if (canPlay == true) { 
-	 x = e.getX();
-	 y = e.getY();
-	if (x>10 && x<369 && y>49 && y<408) {
-        float xxx = (float) 24.0;
-		x = Math.round((x - 10)/xxx);
-		y = Math.round((y - 49)/xxx);
-		if(allchess[x][y] == 0)
-		{
-		if (isBlack == true) {
-			allchess[x][y] = 1;
-			iRobot.retrieveGameBoard(allchess);
-			isBlack = false;
-			string = "It's White";
-			
-		boolean winFlag = this.checkWin();
-		if (winFlag == true) {
-			JOptionPane.showMessageDialog(this, "Game over"+(allchess[x][y]==1 ? "Black" : "White") + "winned");
-			canPlay = false;
-	    	}
-		this.repaint();
-		}
-		else {
-			RobotAction();
-		  }
-		}
-		else {
-			JOptionPane.showMessageDialog(this, "Please play chess in the chessboard");
-		}
-		
-	}
+        x = e.getX();
+        y = e.getY();
+        if (x>10 && x<369 && y>49 && y<408) {
+            float xxx = (float) 24.0;
+            x = Math.round((x - 10)/xxx);
+            y = Math.round((y - 49)/xxx);
+            if(allchess[x][y] == 0)
+            {
+                if (isBlack == true) {
+                    allchess[x][y] = 1;
+                    iRobot.retrieveGameBoard(allchess);
+                    isBlack = false;
+                    string = "It's White";
+
+                    boolean winFlag = this.checkWin();
+                    if (winFlag == true) {
+                        JOptionPane.showMessageDialog(this, "Game over"+(allchess[x][y]==1 ? "Black" : "White") + "winned");
+                        canPlay = false;
+                    }
+                    RobotAction();
+                    this.repaint();
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Please play chess in the chessboard");
+            }
+
+        }
 		
 	}
 }
@@ -241,8 +238,6 @@ void RobotAction(){
 		JOptionPane.showMessageDialog(this, "Game over"+(allchess[x][y]==1 ? "Black" : "White") + " winned");
 		canPlay = false;
 	}
-	
-	this.repaint();
 }
 
 @Override
