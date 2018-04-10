@@ -54,7 +54,7 @@ public class StupidRobot implements IRobot {
                 }
             }
         }
-        if(maxRobotScore > maxOpponentScore){
+        if(maxRobotScore > maxOpponentScore || maxRobotScore==Integer.MAX_VALUE){
             return maxRobotPoint;
         }else{
             return maxOpponentPoint;
@@ -148,7 +148,7 @@ public class StupidRobot implements IRobot {
         }
         String str = sb.toString();
         if(str.contains(role == ROLE_ROBOT ? "22222" : "11111")){
-            return 6000000;
+            return Integer.MAX_VALUE;
         }
         if(str.contains(role == ROLE_ROBOT ? "022220" : "011110")){
             return 300000;
