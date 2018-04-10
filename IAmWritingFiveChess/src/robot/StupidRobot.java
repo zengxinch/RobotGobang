@@ -69,14 +69,6 @@ public class StupidRobot implements IRobot {
     @Override
     public void retrieveGameBoard(int[][] gameBoard) {
         boardRef = gameBoard;
-        System.out.println("------------------------------");
-        for(int i=0;i<BOARD_SIZE;i++){
-            for(int k=0;k<BOARD_SIZE;k++){
-                System.out.print(boardRef[k][i]);
-            }
-            System.out.println();
-        }
-        System.out.println("------------------------------");
     }
 
 
@@ -95,30 +87,63 @@ public class StupidRobot implements IRobot {
             int rightBound = (x +4)<BOARD_SIZE?x+4:BOARD_SIZE-1;
 
             for(int i=leftBound;i<=rightBound;i++){
-                sb.append(boardRef[x][i]);
+                sb.append(boardRef[i][y]);
             }
         }else if(orientation == ORIENTATION_UD){
             int bottomBound = (y+4)<BOARD_SIZE?y+4:BOARD_SIZE-1;
             int topBound = (y-4)>=0?y-4:0;
 
             for(int i=topBound;i<=bottomBound;i++){
-                sb.append(boardRef[i][y]);
+                sb.append(boardRef[x][i]);
             }
         }else if(orientation== ORIENTATION_LT_RD){
-            int leftBound = (x - 4)>=0?x-4:0;
-            int rightBound = (x +4)<BOARD_SIZE?x+4:BOARD_SIZE-1;
-            int bottomBound = (y+4)<BOARD_SIZE?y+4:BOARD_SIZE-1;
-            int topBound = (y-4)>=0?y-4:0;
+            int leftBound = 0,rightBound = 0,bottomBound = 0,topBound = 0;
+            
+           for(int i=1;i<=4;i++){
+               leftBound = x-i;
+               topBound = y-i;
+               if(leftBound<0||topBound<0){
+                   leftBound++;
+                   topBound++;
+                   break;
+               }
+           }
+           for(int k=1;k<=4;k++){
+               rightBound = x+k;
+               bottomBound = y+k;
+               if(rightBound>BOARD_SIZE||bottomBound>BOARD_SIZE){
+                   rightBound--;
+                   bottomBound--;
+                   break;
+               }
+           }
             for(int i=topBound,k=leftBound;i<=bottomBound && k<=rightBound;i++,k++){
-                sb.append(boardRef[i][k]);
+                sb.append(boardRef[k][i]);
             }
         }else if(orientation== ORIENTATION_RT_LD){
-            int leftBound = (x - 4)>=0?x-4:0;
-            int rightBound = (x +4)<BOARD_SIZE?x+4:BOARD_SIZE-1;
-            int bottomBound = (y+4)<BOARD_SIZE?y+4:BOARD_SIZE-1;
-            int topBound = (y-4)>=0?y-4:0;
+            int leftBound = 0,rightBound = 0,bottomBound = 0,topBound = 0;
+
+            for(int i=1;i<=4;i++){
+                rightBound = x+i;
+                topBound = y-i;
+                if(rightBound>BOARD_SIZE||topBound<0){
+                    rightBound--;
+                    topBound++;
+                    break;
+                }
+            }
+            for(int k=1;k<=4;k++){
+                leftBound = x-k;
+                bottomBound = y+k;
+                if(leftBound<0||bottomBound>BOARD_SIZE){
+                    leftBound++;
+                    bottomBound--;
+                    break;
+                }
+            }
+
             for(int i=topBound,k=rightBound;i<=bottomBound && k>=leftBound;i++,k--){
-                sb.append(boardRef[i][k]);
+                sb.append(boardRef[k][i]);
             }
         }
         String str = sb.toString();
